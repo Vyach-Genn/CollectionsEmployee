@@ -2,17 +2,17 @@ package collectionsemployee.collectionsEmployee.employeeService;
 
 import collectionsemployee.collectionsEmployee.employee.Employee;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface EmployeeService {
 
-    void addEmployee(Employee employee);
 
-    void removeEmployee(Employee employee);
+    Employee addEmployee(String firstName, String lastName);
 
-    void findEmployee(Employee employee);
+    Employee removeEmployee(String firstName, String lastName);
 
-    List<Employee> getAllEmployees();
+    Employee findEmployee(String firstName, String lastName);
 
-    String printEmployees(List<Employee> employees);
+    Collection<Employee> printEmployees();
 }
