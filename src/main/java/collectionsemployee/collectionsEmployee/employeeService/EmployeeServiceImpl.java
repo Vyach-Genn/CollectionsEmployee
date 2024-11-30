@@ -6,58 +6,58 @@ import collectionsemployee.collectionsEmployee.employeeControllert.runtimeExcept
 import collectionsemployee.collectionsEmployee.employeeControllert.runtimeExceptionEmployee.EmployeeStorageIsFullException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final Integer maxEmployee = 10;
 
-    private final List<Employee> employeesList;
+    private final Map<String, Employee> employees;
 
     public EmployeeServiceImpl() {
-        this.employeesList = new ArrayList<>();
+        this.employees = new HashMap<>();
     }
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employeesList.size() >= maxEmployee) {
+        if (employees.size() >= maxEmployee) {
             throw new EmployeeStorageIsFullException("Коллекция переполнена");
         }
-        if (employeesList.contains(employee)) {
+        if (employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException("Сотрудник уже имеется в коллекции");
         }
-        employeesList.add(employee);
+        employees.put(employee.getFullName(), employee);
         return employee;
     }
 
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employeesList.contains(employee)) {
-            employeesList.remove(employee);
-            return employee;
+        String  fullName = employee.getFullName();
+        if (employees.containsKey(fullName)) {
+            return employees.remove(fullName);
+
         }
+        System.out.println("Сотрудник не найден.");
         throw new EmployeeNotFoundException("Удаляемый сотрудник не найден");
     }
 
     @Override
     public Employee findEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employeesList.contains(employee)) {
-            return employee;
+        String  fullName = employee.getFullName();
+        if (employees.containsKey(fullName)) {
+            return employees.get(fullName);
         }
+        System.out.println("Сотрудник не найден.");
         throw new EmployeeNotFoundException("Сотрудник не найден.");
     }
 
     @Override
     public Collection<Employee> printEmployees() {
-        return Collections.unmodifiableList(employeesList);
+        return Collections.unmodifiableCollection(employees.values());
     }
-
 
 }
